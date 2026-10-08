@@ -705,30 +705,65 @@ audio.addEventListener('timeupdate',()=>{
 });
 
 // ОТКРЫТЬ ОТКРЫТКУ + СРАЗУ ВКЛЮЧИТЬ МУЗЫКУ
-$('openBtn').addEventListener('click',()=>{
-  if(opening)return;
-  opening=true;
 
-  $('openBtn').disabled=true;
-  audio.currentTime=0;
+$('openBtn').addEventListener('click', () => {
+  if (opening) return;
 
-  // Не делаем await, setTimeout или перехода
-  // на другой экран перед запуском музыки.
-  playMusic();
+  opening = true;
+  $('openBtn').disabled = true;
 
-  // Одновременно открывается 3D-открытка
+  // Настраиваем звук
+  audio.muted = false;
+  audio.volume = 1;
+
+  // На iPhone запускаем непосредственно
+  // при нажатии на кнопку открытия
+  const playPromise = audio.play();
+
+  if (playPromise && typeof playPromise.then === 'function') {
+    playPromise.then(() => {
+      $('musicStatus').textContent = 'Музыка играет ✦';
+      syncMusic();
+    }).catch(error => {
+      console.error('Ошибка музыки:', error);
+
+      $('musicStatus').textContent =
+        'Нажми кнопку ниже, чтобы включить музыку.';
+
+      // Кнопка появляется только при ошибке
+      const retryBtn = document.createElement('button');
+      retryBtn.textContent = '♫ Включить музыку';
+      retryBtn.className = 'gold-btn';
+      retryBtn.style.marginTop = '20px';
+
+      retryBtn.addEventListener('click', async () => {
+        try {
+          await audio.play();
+          retryBtn.remove();
+          syncMusic();
+        } catch (e) {
+          retryBtn.textContent = 'Не удалось запустить трек';
+        }
+      });
+
+      $('musicCard').appendChild(retryBtn);
+    });
+  }
+
+  // Сразу раскрываем открытку
   intro.classList.add('opening');
 
-  setTimeout(()=>{
+  setTimeout(() => {
     site.classList.add('visible');
     document.body.classList.remove('lock');
-  },850);
+  }, 850);
 
-  setTimeout(()=>{
+  setTimeout(() => {
     intro.classList.add('hidden');
     celebrate();
-  },1800);
+  }, 1800);
 });
+
 
 // Управление плеером
 playBtn.addEventListener('click',()=>{
