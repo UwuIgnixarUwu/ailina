@@ -1,0 +1,924 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16070b">
+<title>Happy Birthday ✦ От всех нас</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#16070b;
+  --wine:#350912;
+  --gold:#d7ab65;
+  --gold-light:#f6daa0;
+  --text:#fff2e4;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Manrope,Arial,sans-serif;
+  overflow-x:hidden;
+}
+body.lock{overflow:hidden}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{
+  outline:2px solid var(--gold-light);outline-offset:4px;
+}
+button:disabled{opacity:.55;cursor:not-allowed}
+.container{width:min(100% - 40px,1030px);margin:auto}
+.grain{
+  position:fixed;inset:0;z-index:10;pointer-events:none;
+  opacity:.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.33'/%3E%3C/svg%3E");
+}
+
+/* ОДИН ЭКРАН ОТКРЫТИЯ */
+#intro{
+  position:fixed;inset:0;z-index:100;
+  display:grid;place-items:center;
+  padding:20px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 45%,#651b2b,#1b060b 75%);
+  perspective:1500px;
+  transition:opacity .85s,visibility .85s;
+}
+#intro.hidden{
+  opacity:0;visibility:hidden;pointer-events:none;
+}
+.intro-top{
+  position:absolute;
+  top:max(22px,env(safe-area-inset-top));
+  left:0;right:0;text-align:center;
+  color:var(--gold);font-size:10px;
+  font-weight:800;letter-spacing:3px;
+}
+.book{
+  width:min(370px,79vw,calc((100dvh - 205px)*.72));
+  min-width:180px;aspect-ratio:3/4.15;
+  position:relative;transform-style:preserve-3d;
+  filter:drop-shadow(0 25px 35px #000a);
+  transition:transform 1.2s;
+}
+.book-back{
+  position:absolute;inset:0;
+  border:1px solid #b48b55;
+  background:linear-gradient(145deg,#571321,#21050d);
+  display:grid;place-items:center;
+  text-align:center;padding:25px;
+  box-shadow:inset 0 0 50px #0008;
+}
+.book-back span{
+  font:500 clamp(26px,6vw,43px) "Cormorant Garamond",serif;
+  color:var(--gold-light);
+}
+.book-cover{
+  position:absolute;inset:0;z-index:3;
+  transform-origin:left center;transform-style:preserve-3d;
+  transition:transform 1.7s cubic-bezier(.2,.7,.15,1);
+}
+.cover-front,.cover-inside{
+  position:absolute;inset:0;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.cover-front{
+  padding:15px;
+  border:2px solid #b98a51;
+  background:
+    radial-gradient(ellipse at 75% 15%,#af344770,transparent 50%),
+    linear-gradient(120deg,#390611,#811728 48%,#31050e);
+  box-shadow:inset 10px 0 18px #0008,0 8px 25px #0008;
+}
+.cover-border{
+  border:1px solid #b88a54;height:100%;
+  display:flex;flex-direction:column;
+  justify-content:space-between;align-items:center;
+  padding:22px 10px;text-align:center;
+}
+.cover-mark{color:var(--gold);font-size:35px}
+.cover-small{
+  font-size:9px;letter-spacing:2px;
+  color:var(--gold);font-weight:800;
+}
+.cover-title{
+  font:500 clamp(46px,10vw,73px)/.85 "Cormorant Garamond",serif;
+  margin:17px 0;
+}
+.cover-title em{display:block;color:var(--gold-light)}
+.cover-inside{
+  transform:rotateY(180deg);
+  border:2px solid #a87b48;background:#3b0b16;
+  display:grid;place-items:center;
+  font:italic 34px "Cormorant Garamond",serif;
+  color:var(--gold);
+}
+#intro.opening .book-cover{transform:rotateY(-165deg)}
+#intro.opening .book{transform:translateX(13%) scale(.88)}
+.intro-actions{
+  position:absolute;bottom:max(25px,env(safe-area-inset-bottom));
+  left:15px;right:15px;z-index:5;
+  text-align:center;transition:opacity .3s;
+}
+#intro.opening .intro-actions{opacity:0;pointer-events:none}
+.volume-tip{
+  display:flex;align-items:center;justify-content:center;
+  gap:11px;color:var(--gold-light);
+  font-size:13px;font-weight:800;margin-bottom:18px;
+}
+.volume-tip span{font-size:24px}
+.gold-btn{
+  min-height:57px;padding:16px 27px;
+  border:1px solid #f6d89c;border-radius:4px;
+  background:linear-gradient(120deg,#f9e2b1,#c8954e,#f5d798);
+  color:#39150d;font-size:11px;
+  font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;
+  box-shadow:0 10px 35px #0006;
+}
+.gold-btn:active{transform:scale(.96)}
+.intro-actions p{
+  font-size:11px;color:#d7b19a;
+  margin:15px 0 0;
+}
+#introError{
+  max-width:340px;margin:10px auto 0;
+  color:#ffe0c5;font-size:11px;
+  line-height:1.6;
+}
+
+/* ОСНОВНОЙ САЙТ */
+#site{
+  opacity:0;transition:opacity 1.2s;
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% 5%,#631a2a,transparent 42%),
+    radial-gradient(ellipse at 95% 55%,#42101d,transparent 40%),
+    linear-gradient(180deg,#270910,#140609 75%);
+}
+#site.visible{opacity:1}
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:25px 0;border-bottom:1px solid #c69a5840;
+  gap:10px;
+}
+.logo{
+  font:600 26px "Cormorant Garamond",serif;
+  color:var(--gold);
+}
+.header-right{
+  color:var(--gold);font-size:9px;
+  letter-spacing:2px;font-weight:800;
+}
+.hero{text-align:center;padding:95px 0 55px}
+.eyebrow{
+  color:var(--gold);font-size:10px;
+  font-weight:800;letter-spacing:4px;text-transform:uppercase;
+}
+.hero h1{
+  font:500 clamp(67px,12vw,140px)/.85 "Cormorant Garamond",serif;
+  letter-spacing:-3px;margin:30px 0 20px;
+}
+.hero h1 em{
+  display:block;color:var(--gold-light);font-weight:400;
+}
+.hero p{
+  max-width:520px;font-size:14px;line-height:2;
+  color:#e4bdaf;margin:25px auto;
+}
+.diamond-divider{
+  text-align:center;color:var(--gold);
+  font-size:20px;letter-spacing:13px;margin:22px 0;
+}
+.portrait-section{text-align:center;padding:25px 0 110px}
+.portrait-frame{
+  width:min(405px,85vw);margin:30px auto;padding:13px;
+  position:relative;background:#290910;
+  border:1px solid #b58a50;
+  box-shadow:0 28px 80px #0009;
+}
+.portrait-frame:before{
+  content:"";position:absolute;inset:-11px;
+  border:1px solid #b68a5070;
+}
+.portrait-inner{
+  aspect-ratio:4/5;overflow:hidden;
+  position:relative;background:#541421;
+}
+.portrait-inner img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;position:relative;z-index:1;
+}
+.photo-fallback{
+  position:absolute;inset:0;display:grid;
+  place-content:center;gap:12px;
+  text-align:center;padding:30px;
+  color:var(--gold);
+  font:500 37px "Cormorant Garamond",serif;
+}
+.photo-fallback span{font-size:64px}
+.photo-title{
+  margin:35px 0 8px;
+  font:500 43px "Cormorant Garamond",serif;
+  color:var(--gold-light);
+}
+.photo-caption{
+  color:#bca28d;font-size:10px;
+  letter-spacing:3px;text-transform:uppercase;
+}
+.letter-section{
+  max-width:760px;margin:0 auto 120px;text-align:center;
+}
+.section-title{
+  font:500 clamp(43px,7vw,75px)/1 "Cormorant Garamond",serif;
+  margin:17px 0 27px;
+}
+.letter-card{
+  border:1px solid #ad7f4966;
+  background:linear-gradient(135deg,#53152399,#24080fdd);
+  padding:65px;position:relative;
+}
+.letter-card:before,.letter-card:after{
+  content:"✦";position:absolute;
+  color:var(--gold);font-size:22px;
+}
+.letter-card:before{top:20px;left:23px}
+.letter-card:after{bottom:20px;right:23px}
+.letter-card p{
+  color:#edd2c5;font-size:14px;
+  line-height:2.2;margin:0 0 25px;
+}
+.letter-card strong{color:var(--gold-light)}
+.signature{
+  font:italic 37px "Cormorant Garamond",serif;
+  color:var(--gold);margin-top:20px;
+}
+
+/* ПЛЕЕР */
+.music-section{text-align:center;padding-bottom:125px}
+.music-description{
+  max-width:480px;margin:0 auto 35px;
+  color:#d2a99b;font-size:13px;line-height:2;
+}
+.music-card{
+  max-width:680px;margin:auto;padding:40px;
+  background:radial-gradient(circle at 50% 25%,#64202c,#260a11 72%);
+  border:1px solid #b48b52;
+  box-shadow:0 30px 90px #0008;
+}
+.music-header{
+  display:flex;justify-content:space-between;
+  align-items:center;text-align:left;gap:15px;
+}
+.music-header small{
+  color:var(--gold);font-size:10px;
+  letter-spacing:2px;font-weight:800;
+}
+.music-header h3{
+  font:500 29px "Cormorant Garamond",serif;margin:7px 0;
+}
+.music-header p{font-size:11px;color:#ae8c88;margin:0}
+.eq{display:flex;align-items:center;gap:4px;height:30px}
+.eq i{display:block;width:3px;height:6px;background:var(--gold)}
+.playing .eq i{animation:eq .7s ease-in-out infinite alternate}
+.eq i:nth-child(2){animation-delay:-.2s}
+.eq i:nth-child(3){animation-delay:-.45s}
+.eq i:nth-child(4){animation-delay:-.1s}
+.eq i:nth-child(5){animation-delay:-.35s}
+@keyframes eq{to{height:28px}}
+.vinyl-zone{display:grid;place-items:center;padding:40px 0}
+.vinyl{
+  width:clamp(195px,50vw,260px);aspect-ratio:1;
+  border:7px solid #171015;border-radius:50%;
+  background:repeating-radial-gradient(circle,
+    #241a20 0px,#241a20 2px,#44343c 3px,#1d171b 5px);
+  box-shadow:0 20px 35px #0009,inset 0 0 15px #000;
+  display:grid;place-items:center;position:relative;
+}
+.playing .vinyl{animation:rotate 5s linear infinite}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.vinyl-label{
+  width:47%;aspect-ratio:1;border-radius:50%;
+  border:3px solid #c49a5d;
+  background:radial-gradient(circle,#dbb87a,#8b2230 85%);
+  display:grid;place-content:center;
+  text-align:center;color:#fff0d6;
+  font:600 26px "Cormorant Garamond",serif;
+}
+.vinyl-label small{
+  font:800 7px Manrope,sans-serif;
+  letter-spacing:1px;margin-top:8px;
+}
+.vinyl-label:after{
+  content:"";width:8px;height:8px;
+  position:absolute;left:calc(50% - 4px);
+  top:calc(50% - 4px);
+  background:#190f13;border-radius:50%;
+}
+.progress{
+  width:100%;height:7px;border-radius:20px;
+  appearance:none;-webkit-appearance:none;
+  background:linear-gradient(to right,
+    #e4b773 0%,#e4b773 var(--progress,0%),
+    #64434a var(--progress,0%),#64434a 100%);
+  cursor:pointer;
+}
+.progress::-webkit-slider-thumb{
+  appearance:none;-webkit-appearance:none;
+  width:17px;height:17px;border-radius:50%;
+  border:3px solid #fff0d0;background:#b78139;
+}
+.progress::-moz-range-thumb{
+  width:11px;height:11px;border-radius:50%;
+  border:3px solid #fff0d0;background:#b78139;
+}
+.time-row{
+  display:flex;justify-content:space-between;
+  color:#bfa69b;font-size:11px;margin-top:12px;
+  font-variant-numeric:tabular-nums;
+}
+.controls{
+  display:flex;justify-content:center;align-items:center;
+  gap:24px;margin:25px 0 18px;
+}
+.small-control{
+  width:45px;height:45px;border:0;
+  background:none;color:var(--gold);font-size:26px;
+}
+.play-control{
+  width:73px;height:73px;border-radius:50%;
+  border:1px solid #ffe3ab;
+  background:linear-gradient(130deg,#f9e1aa,#b9853f);
+  color:#35120e;font-size:26px;
+  box-shadow:0 8px 25px #0006;
+}
+.music-status{
+  color:#cda99a;font-size:11px;line-height:1.7;
+  min-height:18px;
+}
+.loop-btn{
+  margin-top:18px;border:1px solid #9b794f;
+  background:#3a111a;color:var(--gold);
+  border-radius:20px;padding:10px 17px;
+  font-size:11px;font-weight:700;
+}
+.final{text-align:center;padding:0 0 110px}
+.final p{color:#c8aa9d;font-size:13px;line-height:2}
+.download{width:min(100%,380px);margin-top:30px}
+.download-note{
+  color:#b39a8b;font-size:11px;
+  margin-top:19px;line-height:1.8;
+}
+footer{
+  text-align:center;color:#b79577;
+  font-size:10px;letter-spacing:2px;
+  padding:28px 14px calc(30px + env(safe-area-inset-bottom));
+  border-top:1px solid #9c774443;
+}
+.reveal{
+  opacity:0;transform:translateY(27px);
+  transition:opacity .8s,transform .8s;
+}
+.reveal.show{opacity:1;transform:translateY(0)}
+#confetti{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:90;
+}
+@media(max-width:650px){
+  .container{width:calc(100% - 34px)}
+  header{padding:20px 0}
+  .logo{font-size:23px}
+  .header-right{font-size:8px}
+  .hero{padding:75px 0 40px}
+  .hero h1{letter-spacing:-2px}
+  .hero p{font-size:13px}
+  .portrait-section{padding-bottom:90px}
+  .letter-section{margin-bottom:95px}
+  .letter-card{padding:45px 24px}
+  .letter-card p{font-size:13px}
+  .music-card{padding:26px 19px}
+  .music-header h3{font-size:24px}
+  .music-section{padding-bottom:95px}
+  .final{padding-bottom:80px}
+}
+@media(max-height:640px){
+  .intro-top{top:12px}
+  .intro-actions{bottom:10px}
+  .intro-actions p{display:none}
+  .book{width:min(260px,58vw,calc((100dvh - 135px)*.72))}
+  .volume-tip{margin-bottom:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none}
+  .playing .vinyl,.playing .eq i{animation:none}
+}
+</style>
+</head>
+<body class="lock">
+
+<div class="grain"></div>
+<canvas id="confetti"></canvas>
+
+<!-- ОДИН ЭКРАН: ОТКРЫТКА + ПРЕДУПРЕЖДЕНИЕ О ЗВУКЕ -->
+<section id="intro" aria-label="Открыть поздравление">
+  <div class="intro-top">A SPECIAL INVITATION ✦</div>
+
+  <div class="book">
+    <div class="book-back">
+      <span>Пусть этот день будет незабываемым ✦</span>
+    </div>
+
+    <div class="book-cover">
+      <div class="cover-inside">Just for you ✦</div>
+      <div class="cover-front">
+        <div class="cover-border">
+          <div class="cover-mark">✦</div>
+          <div>
+            <div class="cover-small">YOU ARE INVITED TO</div>
+            <div class="cover-title">
+              Happy<br><em>Birthday</em>
+            </div>
+            <div class="cover-small">A DAY TO REMEMBER</div>
+          </div>
+          <div class="cover-small">✦ FROM ALL OF US ✦</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="intro-actions">
+    <div class="volume-tip">
+      <span>🔊</span> Сделай звук погромче!
+    </div>
+    <button id="openBtn" class="gold-btn" type="button">
+      ✦ Открыть открытку ✦
+    </button>
+    <p>Небольшой сюрприз от всей нашей компании</p>
+    <div id="introError" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- САЙТ -->
+<main id="site">
+  <div class="container">
+    <header>
+      <div class="logo">The Birthday Edition ✦</div>
+      <div class="header-right">EXCLUSIVELY FOR YOU</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Today we celebrate you</div>
+      <h1>Happy<br><em>Birthday.</em></h1>
+      <div class="diamond-divider">✦ ✧ ✦</div>
+      <p>
+        Сегодня твой день! И наша компания решила,
+        что обычного сообщения с поздравлением будет
+        маловато. Поэтому лови кое-что особенное!
+      </p>
+    </section>
+
+    <section class="portrait-section reveal">
+      <div class="eyebrow">The star of the day</div>
+      <div class="portrait-frame">
+        <div class="portrait-inner">
+          <div class="photo-fallback" id="photoFallback">
+            <span>✦</span>
+            Главная звезда вечера
+          </div>
+          <img src="photo.jpg" alt="Наша именинница" id="birthdayPhoto">
+        </div>
+      </div>
+      <div class="photo-title">Главная героиня дня</div>
+      <div class="photo-caption">One and only • Birthday girl</div>
+    </section>
+
+    <section class="letter-section reveal">
+      <div class="eyebrow">A message from your people</div>
+      <h2 class="section-title">От всей нашей компании</h2>
+      <div class="letter-card">
+        <p>Ну что, именинница, с днём рождения! 🥳</p>
+        <p>
+          Сегодня мы официально разрешаем тебе
+          быть главной звездой, принимать комплименты,
+          загадывать любые желания и просто кайфовать
+          от своего дня.
+        </p>
+        <p>
+          Желаем тебе побольше ярких моментов,
+          крутых приключений, незабываемых поездок,
+          весёлых историй и людей, с которыми
+          можно смеяться до слёз.
+        </p>
+        <p>
+          Пусть всё задуманное получается,
+          настроение всегда будет на высоте,
+          а поводов собираться всей нашей компанией
+          становится только больше!
+        </p>
+        <p>
+          <strong>
+            Оставайся такой же классной, настоящей
+            и неповторимой. Мы очень рады, что ты с нами!
+          </strong>
+        </p>
+        <div class="signature">Твои друзья ✦</div>
+      </div>
+    </section>
+
+    <section class="music-section reveal" id="music">
+      <div class="eyebrow">The soundtrack of your day</div>
+      <h2 class="section-title">Твой день. Твой трек.</h2>
+      <p class="music-description">
+        У каждого крутого момента должен быть свой саундтрек.
+        Этот — специально для сегодняшнего дня.
+        Врубай погромче!
+      </p>
+
+      <div class="music-card" id="musicCard">
+        <div class="music-header">
+          <div>
+            <small>✦ NOW PLAYING</small>
+            <h3>Birthday Soundtrack</h3>
+            <p>A special track from your friends</p>
+          </div>
+          <div class="eq" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+
+        <div class="vinyl-zone">
+          <div class="vinyl">
+            <div class="vinyl-label">
+              B-DAY
+              <small>SPECIAL EDITION</small>
+            </div>
+          </div>
+        </div>
+
+        <input id="seek" class="progress"
+          type="range" min="0" max="1000" value="0"
+          aria-label="Перемотка трека">
+
+        <div class="time-row">
+          <span id="currentTime">0:00</span>
+          <span id="duration">0:00</span>
+        </div>
+
+        <div class="controls">
+          <button id="backBtn" class="small-control"
+            type="button" aria-label="Назад на 10 секунд">↺</button>
+          <button id="playBtn" class="play-control"
+            type="button" aria-label="Воспроизвести">▶</button>
+          <button id="forwardBtn" class="small-control"
+            type="button" aria-label="Вперёд на 10 секунд">↻</button>
+        </div>
+
+        <div class="music-status" id="musicStatus" aria-live="polite">
+          Музыка для твоего праздника ✦
+        </div>
+
+        <button id="loopBtn" class="loop-btn"
+          type="button" aria-pressed="true">
+          ↻ Повтор включён
+        </button>
+      </div>
+    </section>
+
+    <section class="final reveal">
+      <div class="diamond-divider">✦ ✧ ✦</div>
+      <div class="eyebrow">One more thing</div>
+      <h2 class="section-title">Этот день — твой!</h2>
+      <p>
+        Желаем крутого настроения, исполнения желаний<br>
+        и ещё тысячи легендарных моментов вместе!
+      </p>
+      <button id="downloadBtn" class="gold-btn download" type="button">
+        ↓ Скачать праздничный трек
+      </button>
+      <div class="download-note" id="downloadNote">
+        Чтобы этот саундтрек остался с тобой.
+      </div>
+    </section>
+  </div>
+
+  <footer>MADE BY YOUR FRIENDS ✦ HAPPY BIRTHDAY</footer>
+</main>
+
+<audio id="audio" src="music.mp3" preload="auto" loop playsinline></audio>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const audio=$('audio');
+const intro=$('intro');
+const site=$('site');
+const playBtn=$('playBtn');
+const seek=$('seek');
+const musicCard=$('musicCard');
+
+let opening=false;
+let scrubbing=false;
+let audioAvailable=false;
+
+// Фотография
+const photo=$('birthdayPhoto');
+function checkPhoto(){
+  if(photo.naturalWidth>0){
+    $('photoFallback').style.display='none';
+  }else{
+    photo.style.display='none';
+  }
+}
+photo.addEventListener('load',checkPhoto);
+photo.addEventListener('error',checkPhoto);
+if(photo.complete)checkPhoto();
+
+// Время
+function formatTime(t){
+  if(!Number.isFinite(t))return '0:00';
+  const seconds=Math.floor(Math.max(0,t));
+  return Math.floor(seconds/60)+':'+
+    String(seconds%60).padStart(2,'0');
+}
+
+// Музыка
+function syncMusic(){
+  const playing=!audio.paused;
+  musicCard.classList.toggle('playing',playing);
+  playBtn.textContent=playing?'Ⅱ':'▶';
+  playBtn.setAttribute(
+    'aria-label',playing?'Пауза':'Воспроизвести'
+  );
+  if('mediaSession' in navigator){
+    navigator.mediaSession.playbackState=
+      playing?'playing':'paused';
+  }
+}
+
+function playMusic(){
+  // ВАЖНО: audio.play() вызывается непосредственно
+  // из обработчика реального нажатия пользователя.
+  const result=audio.play();
+
+  if(result && typeof result.then==='function'){
+    result.then(()=>{
+      $('musicStatus').textContent=
+        'Праздничный саундтрек играет ✦';
+    }).catch(()=>{
+      $('musicStatus').textContent=
+        'Нажми ▶, чтобы включить музыку.';
+    });
+  }
+  return result;
+}
+
+audio.addEventListener('loadedmetadata',()=>{
+  audioAvailable=true;
+  $('duration').textContent=formatTime(audio.duration);
+});
+
+audio.addEventListener('error',()=>{
+  audioAvailable=false;
+  $('musicStatus').textContent=
+    'Не удалось загрузить music.mp3.';
+});
+
+audio.addEventListener('play',syncMusic);
+audio.addEventListener('pause',syncMusic);
+audio.addEventListener('ended',syncMusic);
+
+audio.addEventListener('timeupdate',()=>{
+  $('currentTime').textContent=
+    formatTime(audio.currentTime);
+
+  if(!scrubbing &&
+     Number.isFinite(audio.duration) &&
+     audio.duration>0){
+    seek.value=Math.round(
+      audio.currentTime/audio.duration*1000
+    );
+    seek.style.setProperty(
+      '--progress',(seek.value/10)+'%'
+    );
+  }
+});
+
+// ОТКРЫТЬ ОТКРЫТКУ + СРАЗУ ВКЛЮЧИТЬ МУЗЫКУ
+$('openBtn').addEventListener('click',()=>{
+  if(opening)return;
+  opening=true;
+
+  $('openBtn').disabled=true;
+  audio.currentTime=0;
+
+  // Не делаем await, setTimeout или перехода
+  // на другой экран перед запуском музыки.
+  playMusic();
+
+  // Одновременно открывается 3D-открытка
+  intro.classList.add('opening');
+
+  setTimeout(()=>{
+    site.classList.add('visible');
+    document.body.classList.remove('lock');
+  },850);
+
+  setTimeout(()=>{
+    intro.classList.add('hidden');
+    celebrate();
+  },1800);
+});
+
+// Управление плеером
+playBtn.addEventListener('click',()=>{
+  if(audio.paused)playMusic();
+  else audio.pause();
+});
+
+$('backBtn').addEventListener('click',()=>{
+  if(audioAvailable){
+    audio.currentTime=Math.max(0,audio.currentTime-10);
+  }
+});
+
+$('forwardBtn').addEventListener('click',()=>{
+  if(audioAvailable){
+    audio.currentTime=Math.min(
+      audio.duration||Infinity,
+      audio.currentTime+10
+    );
+  }
+});
+
+seek.addEventListener('input',()=>{
+  scrubbing=true;
+  seek.style.setProperty(
+    '--progress',(seek.value/10)+'%'
+  );
+  if(Number.isFinite(audio.duration)){
+    $('currentTime').textContent=formatTime(
+      audio.duration*seek.value/1000
+    );
+  }
+});
+
+seek.addEventListener('change',()=>{
+  if(audioAvailable &&
+     Number.isFinite(audio.duration)){
+    audio.currentTime=
+      audio.duration*seek.value/1000;
+  }
+  scrubbing=false;
+});
+
+$('loopBtn').addEventListener('click',()=>{
+  audio.loop=!audio.loop;
+  $('loopBtn').textContent=audio.loop
+    ?'↻ Повтор включён'
+    :'↻ Повтор выключен';
+  $('loopBtn').setAttribute(
+    'aria-pressed',String(audio.loop)
+  );
+});
+
+// Управление музыкой из системного плеера
+if('mediaSession' in navigator){
+  try{
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:'Birthday Soundtrack',
+      artist:'From Your Friends',
+      album:'Birthday Edition'
+    });
+    navigator.mediaSession.setActionHandler(
+      'play',playMusic
+    );
+    navigator.mediaSession.setActionHandler(
+      'pause',()=>audio.pause()
+    );
+  }catch(e){}
+}
+
+// Скачивание
+$('downloadBtn').addEventListener('click',async()=>{
+  const btn=$('downloadBtn');
+  const note=$('downloadNote');
+  if(btn.disabled)return;
+  btn.disabled=true;
+  note.textContent='Подготавливаем скачивание…';
+
+  try{
+    const response=await fetch('music.mp3');
+    if(!response.ok)throw new Error('No file');
+
+    const blob=await response.blob();
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement('a');
+    link.href=url;
+    link.download='Birthday-Soundtrack.mp3';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    note.textContent='Песня готова к сохранению ✦';
+    setTimeout(()=>URL.revokeObjectURL(url),15000);
+  }catch(e){
+    note.textContent='Не удалось скачать песню.';
+  }finally{
+    btn.disabled=false;
+  }
+});
+
+// Появление блоков
+const observer=new IntersectionObserver(entries=>{
+  for(const entry of entries){
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+      observer.unobserve(entry.target);
+    }
+  }
+},{threshold:.08});
+
+document.querySelectorAll('.reveal').forEach(
+  el=>observer.observe(el)
+);
+
+// Конфетти
+const canvas=$('confetti');
+const ctx=canvas.getContext('2d');
+const reducedMotion=matchMedia(
+  '(prefers-reduced-motion: reduce)'
+).matches;
+let pieces=[];
+let running=false;
+let lastFrame=0;
+
+function resizeCanvas(){
+  const dpr=Math.min(devicePixelRatio||1,2);
+  canvas.width=Math.round(innerWidth*dpr);
+  canvas.height=Math.round(innerHeight*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+resizeCanvas();
+addEventListener('resize',resizeCanvas,{passive:true});
+
+function celebrate(){
+  if(running||reducedMotion)return;
+  running=true;
+  pieces=[];
+  const colors=['#e6bd75','#fff0b9','#b72337','#f5dab0'];
+  const count=innerWidth<600?90:150;
+
+  for(let i=0;i<count;i++){
+    pieces.push({
+      x:innerWidth/2,
+      y:innerHeight*.35,
+      vx:(Math.random()-.5)*13,
+      vy:-Math.random()*12-2,
+      size:Math.random()*4+2,
+      life:0,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      angle:Math.random()*6
+    });
+  }
+  requestAnimationFrame(draw);
+}
+
+function draw(t){
+  if(t-lastFrame<25){
+    requestAnimationFrame(draw);
+    return;
+  }
+  lastFrame=t;
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+
+  for(const p of pieces){
+    p.x+=p.vx;
+    p.y+=p.vy;
+    p.vy+=.22;
+    p.vx*=.995;
+    p.life++;
+
+    ctx.save();
+    ctx.globalAlpha=Math.max(0,1-p.life/135);
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.angle+p.life*.07);
+    ctx.fillStyle=p.color;
+    ctx.fillRect(-p.size,-p.size/2,p.size*2,p.size);
+    ctx.restore();
+  }
+
+  pieces=pieces.filter(
+    p=>p.life<135&&p.y<innerHeight+30
+  );
+
+  if(pieces.length){
+    requestAnimationFrame(draw);
+  }else{
+    running=false;
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+  }
+}
+</script>
+</body>
+</html>
