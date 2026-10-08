@@ -605,7 +605,11 @@ footer{
   <footer>MADE BY YOUR FRIENDS ✦ HAPPY BIRTHDAY</footer>
 </main>
 
-<audio id="audio" src="music.mp3" preload="auto" loop playsinline></audio>
+
+<audio id="audio" preload="auto" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 
 <script>
 'use strict';
@@ -706,51 +710,51 @@ audio.addEventListener('timeupdate',()=>{
 
 // ОТКРЫТЬ ОТКРЫТКУ + СРАЗУ ВКЛЮЧИТЬ МУЗЫКУ
 
+
 $('openBtn').addEventListener('click', () => {
   if (opening) return;
 
   opening = true;
   $('openBtn').disabled = true;
 
-  // Настраиваем звук
+  // Важно для iPhone:
+  // запускаем музыку сразу из нажатия,
+  // не перематываем её до play()
   audio.muted = false;
   audio.volume = 1;
 
-  // На iPhone запускаем непосредственно
-  // при нажатии на кнопку открытия
-  const playPromise = audio.play();
+  const promise = audio.play();
 
-  if (playPromise && typeof playPromise.then === 'function') {
-    playPromise.then(() => {
+  if (promise && typeof promise.then === 'function') {
+    promise.then(() => {
       $('musicStatus').textContent = 'Музыка играет ✦';
       syncMusic();
     }).catch(error => {
-      console.error('Ошибка музыки:', error);
+      console.warn('Ошибка воспроизведения:', error);
 
       $('musicStatus').textContent =
-        'Нажми кнопку ниже, чтобы включить музыку.';
+        'Нажми ▶, чтобы включить музыку.';
 
-      // Кнопка появляется только при ошибке
-      const retryBtn = document.createElement('button');
-      retryBtn.textContent = '♫ Включить музыку';
-      retryBtn.className = 'gold-btn';
-      retryBtn.style.marginTop = '20px';
+      // Дополнительная кнопка только при ошибке
+      const retry = document.createElement('button');
+      retry.textContent = '♫ Включить звук';
+      retry.className = 'gold-btn';
+      retry.style.marginTop = '18px';
 
-      retryBtn.addEventListener('click', async () => {
-        try {
-          await audio.play();
-          retryBtn.remove();
+      retry.onclick = () => {
+        audio.play().then(() => {
+          retry.remove();
           syncMusic();
-        } catch (e) {
-          retryBtn.textContent = 'Не удалось запустить трек';
-        }
-      });
+        }).catch(() => {
+          retry.textContent = 'Не удалось включить музыку';
+        });
+      };
 
-      $('musicCard').appendChild(retryBtn);
+      $('musicCard').appendChild(retry);
     });
   }
 
-  // Сразу раскрываем открытку
+  // Открываем открытку одновременно с музыкой
   intro.classList.add('opening');
 
   setTimeout(() => {
@@ -763,6 +767,7 @@ $('openBtn').addEventListener('click', () => {
     celebrate();
   }, 1800);
 });
+
 
 
 // Управление плеером
